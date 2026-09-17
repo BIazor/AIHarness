@@ -92,19 +92,15 @@ function chartSeries(range) {
   }
   keys.forEach((k) => buckets.set(k, 0));
 
-  const perModel = new Map();
   for (const r of rows) {
     const key = bucketKey(r.date, range);
     if (!buckets.has(key)) continue;
     const total = r.inputTokens + r.outputTokens + r.cacheTokens;
     buckets.set(key, buckets.get(key) + total);
-    if (!perModel.has(r.model)) perModel.set(r.model, keys.map(() => 0));
-    perModel.get(r.model)[keys.indexOf(key)] += total;
   }
   return {
     labels: keys,
     totals: keys.map((k) => buckets.get(k)),
-    perModel: [...perModel.entries()],
   };
 }
 
@@ -146,19 +142,6 @@ function renderChart(range) {
       borderWidth: 2,
       order: 0,
     },
-    ...series.perModel.map(([model, values], i) => ({
-      label: model,
-      data: values,
-      borderColor: BUCKET_COLORS[i % BUCKET_COLORS.length],
-      backgroundColor: "transparent",
-      borderDash: [4, 4],
-      borderWidth: 1.5,
-      pointRadius: 0,
-      tension: 0.35,
-      fill: false,
-      order: 1,
-      hidden: true,
-    })),
   ];
 
   const config = {
