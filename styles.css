@@ -13,6 +13,21 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+.phoenix-bg {
+  position: fixed;
+  top: 2vh;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(80vmin, 760px);
+  height: auto;
+  opacity: 0.16;
+  pointer-events: none;
+  z-index: 0;
+  filter: drop-shadow(0 0 26px rgba(255, 122, 217, 0.4));
+}
+
+.banner, .layout, .footer { position: relative; z-index: 1; }
+
 body {
   font-family: var(--font);
   background: var(--bg-gradient);
@@ -55,23 +70,6 @@ body {
   padding: 36px 48px 60px;
   flex: 1;
 }
-
-.sidebar { width: 220px; flex-shrink: 0; }
-.sidebar nav { display: flex; flex-direction: column; gap: 4px; }
-.sidebar nav a {
-  color: var(--text-dim);
-  text-decoration: none;
-  padding: 10px 16px;
-  border-radius: 10px;
-  font-size: 15px;
-  transition: background 0.15s, color 0.15s;
-}
-.sidebar nav a:hover { color: var(--text); background: rgba(255, 255, 255, 0.08); }
-.sidebar nav a.active { background: rgba(255, 255, 255, 0.14); color: var(--text); font-weight: 600; }
-.sidebar-divider { border-top: 1px solid rgba(255, 255, 255, 0.25); margin: 22px 0; }
-.sidebar-user { display: flex; flex-direction: column; gap: 4px; font-size: 13px; }
-.user-label { color: var(--text-dim); }
-.user-email { color: var(--text); }
 
 .content { flex: 1; min-width: 0; }
 
@@ -187,6 +185,6 @@ body {
 
 @media (max-width: 900px) {
   .layout { flex-direction: column; padding: 24px; }
-  .sidebar { width: 100%; }
   .banner { padding: 16px 24px; }
+  .phoenix-bg { width: 94vmin; opacity: 0.13; }
 }

@@ -11,30 +11,50 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <svg class="phoenix-bg" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs>
+      <linearGradient id="phx" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#ffd166" />
+        <stop offset="0.45" stop-color="#ff7ad9" />
+        <stop offset="1" stop-color="#8a6bff" />
+      </linearGradient>
+    </defs>
+    <g fill="none" stroke="url(#phx)" stroke-linecap="round">
+      <!-- body -->
+      <path d="M256 185 C272 228 272 268 256 312 C240 268 240 228 256 185 Z" fill="url(#phx)" stroke="none" />
+      <!-- head + crest + beak -->
+      <circle cx="256" cy="172" r="14" fill="url(#phx)" stroke="none" />
+      <path d="M256 152 C246 132 260 124 254 102" stroke-width="9" />
+      <path d="M269 166 L292 174 L269 182 Z" fill="url(#phx)" stroke="none" />
+      <!-- right wing (mirrored below) -->
+      <g stroke-width="13">
+        <path d="M270 196 C322 150 372 148 432 84" />
+        <path d="M272 216 C332 186 382 190 444 148" stroke-width="11" />
+        <path d="M272 238 C338 228 388 242 428 222" stroke-width="9" />
+      </g>
+      <!-- left wing (mirror) -->
+      <g stroke-width="13" transform="translate(512,0) scale(-1,1)">
+        <path d="M270 196 C322 150 372 148 432 84" />
+        <path d="M272 216 C332 186 382 190 444 148" stroke-width="11" />
+        <path d="M272 238 C338 228 388 242 428 222" stroke-width="9" />
+      </g>
+      <!-- tail flames -->
+      <g stroke-width="11">
+        <path d="M256 318 C250 366 268 398 248 452" />
+        <path d="M242 312 C216 362 234 408 192 444" stroke-width="9" />
+        <path d="M270 312 C298 362 280 408 324 444" stroke-width="9" />
+      </g>
+    </g>
+  </svg>
+
   <header class="banner">
     <a class="logo" href="#">
-      <span class="logo-top">charm</span>
-      <span class="logo-main">H?PER</span>
+      <span class="logo-top">blazor</span>
+      <span class="logo-main">codes</span>
     </a>
   </header>
 
   <div class="layout">
-    <aside class="sidebar">
-      <nav>
-        <a href="#" class="active">Dashboard</a>
-        <a href="#">API Keys</a>
-        <a href="#">Models</a>
-        <a href="#">Plans &amp; Billing</a>
-        <a href="#">Team</a>
-        <a href="#">Settings</a>
-      </nav>
-      <div class="sidebar-divider"></div>
-      <div class="sidebar-user">
-        <span class="user-label">User</span>
-        <span class="user-email">mrdodd14@gmail.com</span>
-      </div>
-    </aside>
-
     <main class="content">
       <h1 class="page-title">Dashboard</h1>
       <p class="page-subtitle">Welcome back, Matthew Dodd!</p>
@@ -113,8 +133,8 @@
   </div>
 
   <footer class="footer">
-    <span class="footer-logo">charm_</span>
-    <p>Copyright © 2026 AIHarness, Inc. · <a href="#">Docs</a> · <a href="#">FAQ</a> · <a href="#">Terms of Service</a> · <a href="#">Privacy Policy</a></p>
+    <span class="footer-logo">blazor_</span>
+    <p>Copyright © 2026 Blazor Codes</p>
   </footer>
 
   <script src="app.js"></script>
