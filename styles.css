@@ -36,18 +36,16 @@ body::before {
 .banner, .layout, .footer { position: relative; z-index: 1; }
 
 .banner {
-  padding: 18px 48px;
-  background: linear-gradient(90deg, #0c0303 0%, #3d0806 35%, #7a120a 60%, #3d0806 85%, #0c0303 100%);
-  border-radius: 0 0 28px 28px;
-  border-bottom: 1px solid rgba(255, 60, 40, 0.35);
+  padding: 18px 48px 8px;
+  background: transparent;
+  text-align: center;
 }
 
-.logo { text-decoration: none; display: inline-flex; flex-direction: column; line-height: 1; }
+.logo { text-decoration: none; display: inline-flex; flex-direction: column; align-items: center; line-height: 1; }
 .logo-top {
   font-size: 13px;
   font-weight: 700;
   color: #ff5a4d;
-  margin-left: 26px;
   letter-spacing: 1px;
 }
 .logo-main {
