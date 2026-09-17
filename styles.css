@@ -37,15 +37,16 @@ body::before {
 
 .banner {
   padding: 18px 48px;
-  background: linear-gradient(90deg, #f8a8dc 0%, #f3b6d9 30%, #d9f3a0 100%);
+  background: linear-gradient(90deg, #0c0303 0%, #3d0806 35%, #7a120a 60%, #3d0806 85%, #0c0303 100%);
   border-radius: 0 0 28px 28px;
+  border-bottom: 1px solid rgba(255, 60, 40, 0.35);
 }
 
 .logo { text-decoration: none; display: inline-flex; flex-direction: column; line-height: 1; }
 .logo-top {
   font-size: 13px;
   font-weight: 700;
-  color: #c72db8;
+  color: #ff5a4d;
   margin-left: 26px;
   letter-spacing: 1px;
 }
@@ -53,8 +54,8 @@ body::before {
   font-size: 34px;
   font-weight: 700;
   font-family: var(--mono);
-  color: #b02fd6;
-  text-shadow: 2px 2px 0 #ffe14d;
+  color: #e0301e;
+  text-shadow: 2px 2px 0 #2a0503;
   letter-spacing: 2px;
 }
 
