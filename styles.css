@@ -13,30 +13,27 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-.phoenix-bg {
-  position: fixed;
-  top: 2vh;
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(80vmin, 760px);
-  height: auto;
-  opacity: 0.16;
-  pointer-events: none;
-  z-index: 0;
-  filter: drop-shadow(0 0 26px rgba(255, 122, 217, 0.4));
-}
-
-.banner, .layout, .footer { position: relative; z-index: 1; }
-
 body {
   font-family: var(--font);
-  background: var(--bg-gradient);
+  background: #050405 url("phoenix.jpg") no-repeat center 18%;
+  background-size: cover;
   background-attachment: fixed;
   color: var(--text);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
+
+/* dark veil over the phoenix so white text/cards stay readable */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 2, 6, 0.42);
+  z-index: 0;
+}
+
+.banner, .layout, .footer { position: relative; z-index: 1; }
 
 .banner {
   padding: 18px 48px;
@@ -186,5 +183,5 @@ body {
 @media (max-width: 900px) {
   .layout { flex-direction: column; padding: 24px; }
   .banner { padding: 16px 24px; }
-  .phoenix-bg { width: 94vmin; opacity: 0.13; }
+  body { background-position: center top; }
 }
