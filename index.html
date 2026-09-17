@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AIHarness — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="banner">
+    <a class="logo" href="#">
+      <span class="logo-top">charm</span>
+      <span class="logo-main">H?PER</span>
+    </a>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <nav>
+        <a href="#" class="active">Dashboard</a>
+        <a href="#">API Keys</a>
+        <a href="#">Models</a>
+        <a href="#">Plans &amp; Billing</a>
+        <a href="#">Team</a>
+        <a href="#">Settings</a>
+      </nav>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-user">
+        <span class="user-label">User</span>
+        <span class="user-email">mrdodd14@gmail.com</span>
+      </div>
+    </aside>
+
+    <main class="content">
+      <h1 class="page-title">Dashboard</h1>
+      <p class="page-subtitle">Welcome back, Matthew Dodd!</p>
+
+      <section class="stat-cards">
+        <div class="card stat-card">
+          <span class="stat-label">Tokens Used (All Time)</span>
+          <div class="stat-value" id="stat-total-tokens">—</div>
+        </div>
+        <div class="card stat-card">
+          <span class="stat-label">Cost (All Time)</span>
+          <div class="stat-value" id="stat-total-cost">—</div>
+        </div>
+        <div class="card stat-card">
+          <span class="stat-label">Requests (All Time)</span>
+          <div class="stat-value" id="stat-total-requests">—</div>
+        </div>
+        <div class="card stat-card">
+          <span class="stat-label">Models Used</span>
+          <div class="stat-value" id="stat-model-count">—</div>
+        </div>
+        <div class="card stat-card">
+          <span class="stat-label">Last Activity</span>
+          <div class="stat-value" id="stat-last-activity">—</div>
+        </div>
+      </section>
+
+      <section class="card chart-card">
+        <div class="card-header">
+          <h2>Tokens Used Over Time</h2>
+          <div class="range-toggle" id="range-toggle">
+            <button class="range-btn active" data-range="daily">Daily</button>
+            <button class="range-btn" data-range="weekly">Weekly</button>
+            <button class="range-btn" data-range="monthly">Monthly</button>
+          </div>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="usage-chart"></canvas>
+        </div>
+        <p class="chart-note">Sum of all models</p>
+      </section>
+
+      <section class="card table-card">
+        <div class="card-header">
+          <h2>Usage by Model</h2>
+          <div class="range-toggle" id="table-range-toggle">
+            <button class="range-btn active" data-range="daily">Daily</button>
+            <button class="range-btn" data-range="weekly">Weekly</button>
+            <button class="range-btn" data-range="monthly">Monthly</button>
+          </div>
+        </div>
+        <div class="table-scroll">
+          <table class="usage-table" id="usage-table">
+            <thead>
+              <tr>
+                <th>MODEL</th>
+                <th>INPUT TOKENS</th>
+                <th>OUTPUT TOKENS</th>
+                <th>CACHE TOKENS</th>
+                <th>TOTAL TOKENS</th>
+                <th>REQUESTS</th>
+                <th>COST</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+            <tfoot></tfoot>
+          </table>
+        </div>
+      </section>
+
+      <section class="model-stats">
+        <h2 class="section-title">Model Statistics</h2>
+        <div class="model-cards" id="model-cards"></div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <span class="footer-logo">charm_</span>
+    <p>Copyright © 2026 AIHarness, Inc. · <a href="#">Docs</a> · <a href="#">FAQ</a> · <a href="#">Terms of Service</a> · <a href="#">Privacy Policy</a></p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
