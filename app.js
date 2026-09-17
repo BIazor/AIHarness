@@ -17,6 +17,14 @@ function todayStr(offsetDays = 0) {
   return d.toISOString().slice(0, 10);
 }
 
+function localDateStr(offsetDays = 0) {
+  const d = new Date();
+  d.setDate(d.getDate() + offsetDays);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+let HOURLY_ROWS = [];
+
 async function loadRows() {
   if (!STATIC_MODE) {
     const res = await fetch(`${API_BASE}/api/usage`);
@@ -28,6 +36,21 @@ async function loadRows() {
   }
   const res = await fetch("data/usage.json", NO_CACHE);
   if (!res.ok) throw new Error(`data/usage.json failed: ${res.status}`);
+  const data = await res.json();
+  return data.rows || [];
+}
+
+async function loadHourlyRows() {
+  if (!STATIC_MODE) {
+    const res = await fetch(`${API_BASE}/api/hourly`);
+    if (res.ok) {
+      const data = await res.json();
+      return data.rows || [];
+    }
+    STATIC_MODE = true;
+  }
+  const res = await fetch("data/hourly.json", NO_CACHE);
+  if (!res.ok) throw new Error(`data/hourly.json failed: ${res.status}`);
   const data = await res.json();
   return data.rows || [];
 }
@@ -69,39 +92,51 @@ function rowsInRange(range) {
 }
 
 function chartSeries(range) {
-  const rows = ALL_ROWS;
-  const buckets = new Map();
-  const window = { daily: 30, weekly: 12, monthly: 12 }[range];
-
-  const keys = [];
   if (range === "daily") {
-    for (let i = window - 1; i >= 0; i--) keys.push(todayStr(-i));
-  } else if (range === "weekly") {
-    const anchor = bucketKey(todayStr(), "weekly");
-    for (let i = window - 1; i >= 0; i--) {
-      const d = new Date(anchor + "T00:00:00");
-      d.setDate(d.getDate() - i * 7);
-      keys.push(d.toISOString().slice(0, 10));
+    // 12 bars of 2h each for the most recent day that has hourly data
+    const dates = HOURLY_ROWS.map((r) => r.date);
+    const day = dates.length ? dates.sort().at(-1) : localDateStr();
+    const labels = Array.from({ length: 12 }, (_, s) => `${String(s * 2).padStart(2, "0")}-${String(s * 2 + 2).padStart(2, "0")}`);
+    const totals = labels.map(() => 0);
+    for (const r of HOURLY_ROWS) {
+      if (r.date !== day) continue;
+      totals[r.slot] += r.inputTokens + r.outputTokens + r.cacheTokens;
     }
-  } else {
-    const now = new Date();
-    for (let i = window - 1; i >= 0; i--) {
-      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      keys.push(d.toISOString().slice(0, 7));
-    }
+    return { labels, totals };
   }
-  keys.forEach((k) => buckets.set(k, 0));
 
-  for (const r of rows) {
-    const key = bucketKey(r.date, range);
-    if (!buckets.has(key)) continue;
-    const total = r.inputTokens + r.outputTokens + r.cacheTokens;
-    buckets.set(key, buckets.get(key) + total);
+  if (range === "weekly") {
+    const labels = [];
+    const keys = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      keys.push(localDateStr(-i));
+      labels.push(d.toLocaleDateString("en-US", { weekday: "short", day: "numeric" }));
+    }
+    const totals = keys.map(() => 0);
+    for (const r of ALL_ROWS) {
+      const idx = keys.indexOf(r.date);
+      if (idx >= 0) totals[idx] += r.inputTokens + r.outputTokens + r.cacheTokens;
+    }
+    return { labels, totals };
   }
-  return {
-    labels: keys,
-    totals: keys.map((k) => buckets.get(k)),
-  };
+
+  // monthly: 12 bars, one per month
+  const now = new Date();
+  const labels = [];
+  const keys = [];
+  for (let i = 11; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    keys.push(d.toISOString().slice(0, 7));
+    labels.push(d.toLocaleDateString("en-US", { month: "short" }));
+  }
+  const totals = keys.map(() => 0);
+  for (const r of ALL_ROWS) {
+    const idx = keys.indexOf(bucketKey(r.date, "monthly"));
+    if (idx >= 0) totals[idx] += r.inputTokens + r.outputTokens + r.cacheTokens;
+  }
+  return { labels, totals };
 }
 
 function aggregateByModel(rows) {
@@ -125,27 +160,21 @@ let chart = null;
 function renderChart(range) {
   const series = chartSeries(range);
   const ctx = document.getElementById("usage-chart").getContext("2d");
-  const gradient = ctx.createLinearGradient(0, 0, 0, 340);
-  gradient.addColorStop(0, "rgba(255, 122, 217, 0.55)");
-  gradient.addColorStop(1, "rgba(255, 122, 217, 0.02)");
 
   const datasets = [
     {
       label: "Total tokens (all models)",
       data: series.totals,
+      backgroundColor: "rgba(255, 122, 217, 0.65)",
+      hoverBackgroundColor: "#ff7ad9",
       borderColor: "#ff7ad9",
-      backgroundColor: gradient,
-      fill: true,
-      tension: 0.35,
-      pointRadius: series.labels.length > 60 ? 0 : 3,
-      pointHoverRadius: 5,
-      borderWidth: 2,
-      order: 0,
+      borderWidth: 1,
+      borderRadius: 6,
     },
   ];
 
   const config = {
-    type: "line",
+    type: "bar",
     data: { labels: series.labels, datasets },
     options: {
       responsive: true,
@@ -169,10 +198,11 @@ function renderChart(range) {
       },
       scales: {
         x: {
-          grid: { color: "rgba(255,255,255,0.07)" },
+          grid: { display: false },
           ticks: { color: "rgba(255,255,255,0.65)", maxTicksLimit: 12, maxRotation: 0 },
         },
         y: {
+          beginAtZero: true,
           grid: { color: "rgba(255,255,255,0.07)" },
           ticks: {
             color: "rgba(255,255,255,0.65)",
@@ -299,7 +329,7 @@ async function init() {
   setupToggle("range-toggle", renderAll);
   setupToggle("table-range-toggle", renderAll);
   try {
-    ALL_ROWS = await loadRows();
+    [ALL_ROWS, HOURLY_ROWS] = await Promise.all([loadRows(), loadHourlyRows()]);
   } catch (err) {
     console.error(err);
     document.getElementById("stat-total-tokens").textContent = "API offline";
@@ -309,7 +339,7 @@ async function init() {
   renderAll("daily");
   setInterval(async () => {
     try {
-      ALL_ROWS = await loadRows();
+      [ALL_ROWS, HOURLY_ROWS] = await Promise.all([loadRows(), loadHourlyRows()]);
       const active = document.querySelector("#range-toggle .range-btn.active");
       renderAll(active ? active.dataset.range : "daily");
       renderAllTimeStats().catch(console.error);
