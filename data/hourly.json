@@ -1,1 +1,1 @@
-{"rows": []}
+{"rows": [{"date": "2026-09-17", "slot": 10, "model": "hyper/glm-5.3-flash", "inputTokens": 3000000, "outputTokens": 3000000, "cacheTokens": 3000000, "requests": 3, "cost": 214.46}, {"date": "2026-09-17", "slot": 10, "model": "hyper/kimi-k3", "inputTokens": 500000, "outputTokens": 100000, "cacheTokens": 0, "requests": 1, "cost": 65.329}]}
